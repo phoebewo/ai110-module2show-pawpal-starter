@@ -7,10 +7,16 @@
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+Three core actions: track tasks, schedule tasks, explain reason for task.
+
+I chose Task, Pet, Owner, and Constraints to be the classes. Task represents an activity, how long it takes, and it's priority level. Pet represents the pet - it's name and species. Owner represents the owner - their name and their pets. Constraints represents the scheduling rules - the avaliable time and priority. THe DailyPlan class is the scheduler.
+
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+DailyPlan had no link to Pet, but it should to know which pet its for, especially if the owner has more than one pet. Task had no link to Pet, but it should because some task are specific to only some pets.
 
 ---
 
@@ -21,10 +27,16 @@
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+The scheduler looks at three things: how much time is available, the priority of each task (low/medium/high), and a minimum priority cutoff so low-priority tasks can be filtered out. I decided priority mattered most because if time runs short, it makes more sense to drop a weekly grooming than a daily feeding. Time budget came second since that's the real-world limit a pet owner actually has.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+
+**Exact time match vs. overlapping duration detection**
+
+`detect_conflicts()` only flags two tasks if they have the exact same `time` value. It won't catch a 30-minute task at `07:00` overlapping a task at `07:15`, even though they'd actually run at the same time. Checking for real duration overlap would mean comparing every task's start and end time against every other task's, which gets complicated fast. For a pet care schedule with a small number of tasks in round time slots, exact-match is good enough to catch the obvious mistakes.
 
 ---
 
