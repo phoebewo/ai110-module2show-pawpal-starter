@@ -1,0 +1,59 @@
+classDiagram
+
+    %% ── Data classes ─────────────────────────────────────────────────────────
+
+    class Task {
+        +str description
+        +int duration_minutes
+        +str frequency
+        +str priority
+        +bool completed
+        +str time
+        +str pet_name
+        +date due_date
+        +date completed_date
+        +mark_complete()
+        +reset()
+        +next_occurrence() Task
+    }
+
+    class Pet {
+        +str name
+        +str species
+        +List~Task~ tasks
+        +add_task(task: Task)
+        +get_pending_tasks() List~Task~
+    }
+
+    class Owner {
+        +str name
+        +List~Pet~ pets
+        +add_pet(pet: Pet)
+        +get_pet(name: str) Pet
+        +get_all_tasks() List~Task~
+        +get_all_pending_tasks() List~Task~
+    }
+
+    %% ── Scheduler ────────────────────────────────────────────────────────────
+
+    class Scheduler {
+        +Owner owner
+        +int available_minutes
+        +str min_priority
+        +List~Task~ scheduled
+        +List~Task~ skipped
+        +generate() List~Task~
+        +mark_task_complete(task: Task) Task
+        +sort_by_time(tasks: List~Task~) List~Task~
+        +filter_tasks(tasks, pet_name, status) List~Task~
+        +detect_conflicts(tasks: List~Task~) List~str~
+        +time_used() int
+        +summary() str
+    }
+
+    %% ── Relationships ────────────────────────────────────────────────────────
+
+    Owner "1" *-- "0..*" Pet : owns
+    Pet "1" *-- "0..*" Task : owns
+    Scheduler "1" --> "1" Owner : schedules for
+    Task ..> Task : next_occurrence() creates
